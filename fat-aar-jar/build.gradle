@@ -1,0 +1,96 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        minSdk 23
+        targetSdk 32
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    //把所有依赖的 jar 包拷贝至 build/outputs/aar2/libs
+    task syncAllJars() {
+        // 将指定路径下的所有 jar 包，打包至被打包的路径下
+        new File(buildDir.getPath()).mkdirs()
+        def dir = new File(buildDir.getPath()+'/../libs/')
+        files(dir.listFiles()).each { file ->
+            if (file.name.endsWith('.jar')) {
+                copy {
+                    into buildDir.getPath() + "/outputs/aar2/libs"
+                    from file.absolutePath
+                }
+            }
+        }
+    }
+
+// 把所有依赖的 aar 包中包含的 classes.jar
+// 都拷贝到 build/outputs/aar2/libs下，并重命名以不被覆盖
+    task syncAllAars() {
+        def jarName
+        def aarPath
+        new File(buildDir.getPath()).mkdirs()
+        def destDir = buildDir.getPath()+"/outputs/aar2"
+        def dir = new File(buildDir.getPath()+'/../libs/')
+        files(dir.listFiles()).each { file ->
+            aarPath = file.absolutePath
+
+            if (file.name.endsWith('.aar')) {
+                jarName = "libs/" + file.name.replace(".aar",".jar")
+                copy {
+                    from zipTree(aarPath)
+                    into destDir
+                    include "**/*"
+                    rename 'classes.jar', jarName
+                }
+            }
+        }
+    }
+
+// 将多个 jar 包打包成一个 classes.jar
+    task makeJar(type: Jar) {
+        archiveName = 'classes.jar'
+        new File(buildDir.getPath()).mkdirs()
+        def dir = new File(buildDir.getPath()+'/outputs/aar2/libs/')
+        println("jar="+dir)
+        files(dir.listFiles()).each { file ->
+
+            if (file.name.endsWith('.jar')) {
+                from (project.zipTree(file.absolutePath))
+            }
+        }
+        destinationDirectory = file(buildDir.getPath()+"/outputs/aar2")
+    }
+
+    task fataar(dependsOn:[syncAllAars, syncAllJars, makeJar]) {}
+
+//生成最终 aar 包，自动拷贝到app/libs
+    task assembleAAR(dependsOn:[fataar], type: Zip) {
+        def destDir = buildDir.getPath()+"/outputs/aar2"
+        baseName "fat-aar-jar"
+        extension "aar"
+        version '1.0.0'
+        destinationDirectory = file('../app/libs/')
+        from destDir
+        exclude "libs"
+    }
+}
+
+dependencies {
+}
