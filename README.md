@@ -1,5 +1,5 @@
 # fat-aar-jar
-把多个aar或者jar打包为一个aar包
+把多个aar或者jar打包为一个aar包，使用方法：把fat-aar和fat-aar-jar拷贝到自己的工程中当module引入，编译方法请参见demo
 
 目录结构：
 
@@ -16,4 +16,7 @@ fat-aar-jar：用于把libs下的多个aar包或者jar打包成一个新的aar�
 app：用于验证和包的效果，验证之前先sync gradle file一次
 
 注意：以上命令在执行过程如果有错误，一般都是缓存引起的，先执行对应module下build的clean即可
+
+
+
 
