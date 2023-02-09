@@ -1,22 +1,5 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-    }
-}
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        flatDir {
-            dirs('libs')
-        }
-    }
-}
-rootProject.name = "My Application"
 include ':app'
 include ':fat-aar-jar'
+include ':fat-aar'
 include ':aar1'
 include ':aar2'

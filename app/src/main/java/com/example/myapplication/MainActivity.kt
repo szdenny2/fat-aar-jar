@@ -11,5 +11,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         A1.println()
         A2.println()
+        io.netty.handler.flush.FlushConsolidationHandler()
     }
 }

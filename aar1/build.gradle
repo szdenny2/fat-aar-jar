@@ -24,6 +24,23 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    //编译完成自动拷贝到 fat-aar libs下
+    afterEvaluate {
+        // for app test, copy the final aar to application libs
+        android.libraryVariants.all { variant ->
+            File outputFile = variant.outputs.first().outputFile
+            tasks.named("assemble${variant.name.capitalize()}").configure {
+                doLast {
+                    copy {
+                        from outputFile
+                        into "../fat-aar/libs"
+                        rename outputFile.name, "aar1.aar"
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 dependencies {
