@@ -15,7 +15,7 @@ app：用于验证和包的效果，运行之前先sync gradle file一次，这�
 
 注意：以上命令在执行过程如果有错误，一般都是缓存引起的，先执行对应module下build的clean即可
 
-使用方法：把fat-aar和fat-aar-jar拷贝到自己的工程中当module引入，编译方法请参见demo
+使用方法：把fat-aar和fat-aar-jar拷贝到自己的工程中当module引入，编译方法请参见demo。
 
 
 
