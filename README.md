@@ -24,6 +24,10 @@
 使用方法：把fat-aar和fat-aar-jar拷贝到自己的工程中当module引入，编译方法请参见demo。
 
 
+致谢
+https://github.com/adwiv/android-fat-aar
+
+
 
 
 
